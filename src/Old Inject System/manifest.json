@@ -1,0 +1,45 @@
+{
+    
+      "manifest_version": 2,
+      "name": "ReFont",
+      "version": "0.8",
+    
+      "description": "Change the default font of any website to one of your choice.",
+    
+      "icons": {
+        "32": "Pict32.png",
+        "64": "Pict64.png",
+        "128": "Pict128.png"
+      },
+      "background": {
+        "page": "refont.background"
+      },
+      "browser_action": {
+        "default_title": "ReFont This Site",
+        "default_icon": "Pict64.png",
+        "default_popup": "browserAction.html"
+      },
+      "content_scripts": [
+        {
+          "matches": ["<all_urls>"],
+          "js": ["frontend.js"],
+          "run_at": "document_end"
+        },
+        {
+          "matches": ["*://fonts.google.com/*"],
+          "js": ["getFonts.js"],
+          "run_at": "document_idle"
+        }
+      ],
+      "permissions": [
+        "storage",
+        "tabs"
+      ],
+      "applications": {
+        "gecko": {
+            "id": "refontff_c@ext.sandpe.co",
+            "strict_min_version": "52.0"
+        }
+      }
+    
+}

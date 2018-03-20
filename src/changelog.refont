@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <style>
+            div{
+                border-left: 1px solid black;
+                padding-top: 1px;
+                padding-bottom: 1px;
+            }
+            h1{
+                padding: 5px;
+            }
+            li{
+                padding-left: 30px;
+            }
+        </style>
+    </head>
+    <body>
+        <a href="mgmt.refont">Back to Settings</a>
+        <br>
+        <br>
+        <div id="v1-3">
+            <h1>v1.3</h1>
+            <li>Finished UX / Sett`ings UI.</li>
+            <li>Fixed a bug where update notification did not show in some circumstances.</li>
+            <li>Fixed the position of the ReFont logo.</li>
+            <li>Prevented text highlighting on browser action.</li>
+        </div>
+        <br>
+        <div id="v1-2">
+            <h1>v1.2</h1>
+            <li>New logo.</li>
+            <li>Made it easier to tell whether ReFont is enabled by adding a dynamic browser action icon.</li>
+            <li>Improved readability on browser action.</li>
+            <li>Fixed UX bugs resulting from recent changes.</li>
+            <li>Added a changelog.</li>
+            <li>Notification on update in browser action with link to changelog.</li>
+            <li>Added new 'lists' page to settings.</li>
+            <li>Users can now restore the default list.</li>
+            <li>The font library and list can be exported to JSON for backup or editing.</li>
+            <li>Added a feature which can backup the extension's configuration and restore from the backup.</li>
+            <li>Fixed issues where conflicting lists caused the extension to break.</li>
+            <li>Pop up message lets users know how many conflicts had to be resloved to import a list.</li>
+            <li>Added a feedback button to the settings page.</li>
+            <li>Miscellaneous improvements.</li>
+        </div>
+        <br>
+        <div id="v1-1">
+            <h1>v1.1</h1>
+            <li>User Interface optimisations.</li>
+            <li>User Interface bug fixes.</li>
+            <li>Miscellaneous improvements.</li>
+        </div>
+        <br>
+        <div id="v1-0-4">
+            <h1>v1.0.4</h1>
+            <li>Improvements to the browser action user interface for enhanced ease of use.</li>
+        </div>
+        <br>
+        <div id="v1-0-3">
+            <h1>v1.0.3</h1>
+            <li>Minor edits to UI.</li>
+        </div>
+        <br>
+        <div id="v1-0-2">
+            <h1>v1.0.2</h1>
+            <li>Minor bug fix.</li>
+        </div>
+        <br>
+        <div id="v1-0-1">
+            <h1>v1.0.1</h1>
+            <li>Fixed a bug which prevented the user from disabling the font changer.</li>
+        </div>
+        <br>
+        <div id="v1">
+            <h1>v1</h1>
+            <li>ReFont is released!</li>
+        </div>
+    </body>
+</html>

@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <script src="action.ui.js">
+        </script>
+        <style>
+            body{
+                overflow: hidden;
+                background: rgb(238, 238, 238);
+                height: 425px;
+                width: 230px;
+                overflow-wrap: break-word;
+                -moz-user-select: none;
+            }
+            body.lessOptions, body.alt{
+                height: 210px;
+            }
+            #siteOptions, #pageOptions, #globalOptions{
+                background: rgb(245, 245, 245);
+                width: 100%;
+                position: relative;
+            }
+            #siteOptions, #pageOptions{
+                transition: opacity 0.5s;
+            }
+            select{
+                border: 0;
+                padding: 15px;
+                border-radius: 4px;
+            }
+            input[type=button]{
+                background: rgba(209, 211, 224, 0.8);
+                border: 1px solid rgba(0, 0, 0, 0.1);
+                padding: 4px;
+                transition: background 0.25s;
+            }
+            input[type="button"]:hover{
+                background: rgba(174, 180, 216, 0.8);
+                border: 1px solid rgba(0, 0, 0, 0.5);
+            }
+            select{
+                transition: background 0.25s;
+                border: 1px solid rgba(0, 0, 0, 0);
+            }
+            select:hover{
+                background: rgb(224, 223, 233);
+                border: 1px solid rgba(0, 0, 0, 0.5);
+            }
+            @keyframes fall{
+                0%{
+                    opacity: 0.5;
+                    transform: translate(0,-100%) rotate(35deg);
+                }
+                50%{
+                    opacity: 0.6;
+                    transform: translate(0,-50%) rotate(-20deg);
+                }
+            }
+            #browserAction{
+                animation: fade 0.3s cubic-bezier(0.05, 0.82, 0.165, 0.5);
+                position: absolute;
+                font-family: Arial, Sans-Serif;
+                overflow: hidden;
+                left: 0px;
+                top: 75px;
+                height: 100%;
+                width: 100%;
+                box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.25);
+                transition: top 0.25s, opacity 0.4s, filter 0.1s;
+            }
+            #browserAction.active:hover{
+                top: 72px;
+            }
+            #browserAction.dull{
+                filter: grayscale(75%);
+                opacity: 0.4;
+            }
+            #alt{
+                animation: fall 0.6s cubic-bezier(0.75, 0, 0.6, 0.5);
+                position: fixed;
+                font-family: Courier New, Courier, monospace;
+                top: 75px;
+            }
+            .fontSelect, [type="button"]{
+                width: 100%;
+                color: rgb(0, 0, 0);
+            }
+            .openMgmt{
+                color: black;
+                top: 50%;
+                transform: translateY(-50%);
+                transition: 0.25s;
+            }
+            .openMgmt:hover{
+                color: blue;
+                background: rgba(255, 255, 255, 0.5);
+                filter: invert(100%);
+                transform: translatey(-50%) scale(1.25);
+                border-radius: 3px;
+            }
+            .openMgmt:active{
+                color: green;
+            }
+            #openManagement{
+                position: absolute;
+                right: 42px;
+            }
+            #getFonts{
+                position: absolute;
+                right: 10px;
+            }
+            #pageOptions{
+                padding-bottom: 20px;
+            }
+            #reFont{
+                position: absolute;
+                width: 100%;
+                height: 100%;
+                left: 0px;
+                top: 0px;
+                height: 50px;
+                background: white;
+                text-shadow: 0px -5px 10px rgba(0, 0, 0, 0.25);
+                padding-bottom: 25px;
+                font-size-adjust: 1;
+                font-size: 11px;
+                box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.2);
+                padding-left: 70px;
+            }
+            #reFontOverlay{
+                opacity: 1;
+                transition: 0.5s ease;
+            }
+            #reFontOverlay::after{
+                position: absolute;
+                left: 0px;
+                top: 0px;
+                padding: 5px;
+                height: 50px;
+                content: url(Log.png);
+                width: 100%;
+            }
+            
+            #reFont::after{
+                position: absolute;
+                left: 0px;
+                top: 0px;
+                padding: 5px;
+                content: url(Logd.png);
+                position: absolute;
+            }
+            #mgmtContainer{
+                font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+                position: absolute;
+                bottom: 0px;
+                left: 0px;
+                width: 100%;
+                padding-left: 5px;
+                padding-bottom: 10px;
+                padding-top: 9px;
+                background-color: rgb(245, 245, 245);
+                box-shadow: 0px -1px 2px rgba(0, 0, 0, 0.2);
+                transition: 0.25s;
+                text-align: left;
+                border-top-left-radius: 5px;
+                border-top-right-radius: 5px;
+            }
+            #mgmtContainer:hover{
+                padding-bottom: 13px;
+                padding-top: 14px;
+            }
+            .st{
+                font-size: 22px;
+                text-shadow: 0px 0px 3px rgba(0, 0, 0, 0.25);
+            }
+
+
+            .enabled {
+                position: fixed;
+                display: inline-block;
+                width: 60px;
+                height: 34px;
+                right: 15px;
+                top: 24px;
+                box-shadow: 0px -5px 10px rgba(0, 0, 0, 0.25);
+                border-radius: 5px;
+                transition: transform 0.1s linear;
+            }
+            .enabled:active{
+                transform: scale(0.925);
+            }
+            input[type="checkbox"] {
+                visibility: hidden;
+            }
+
+            .slide {
+                position: absolute;
+                cursor: pointer;
+                top: 0;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                background-color: rgb(163, 20, 20);
+                transition: 0.5s  cubic-bezier(0.1, 0.8, 0.2, 1);
+                border-radius: 5px;
+            }
+
+            .slide::before {
+                position: absolute;
+                content: "";
+                height: 26px;
+                width: 26px;
+                left: 4px;
+                bottom: 3px;
+                border: 1px solid white;
+                transition: 0.5s  cubic-bezier(0.1, 0.8, 0.2, 1);
+                border-radius: 50pc;
+                background: rgba(255, 255, 255, 0.125)
+            }
+
+            input:checked + .slide {
+                background-color: rgb(4, 121, 4);
+            }
+
+            input:hover + .slide {
+                opacity: 0.8;
+                transform: scale(1.025);
+            }
+
+            input:checked + .slide:before {
+                transform: translateX(26px);
+            }
+            #lessOptionsToggle{
+                bottom: 117px;
+                left: 50%;
+                transform: translateX(-50%);
+                cursor: default;
+                position: absolute;
+                color: rgba(0, 0, 0, 0.4);
+                transition: 0.5s;
+                padding: 5px;
+                border-radius: 4px;
+            }
+            #lessOptionsToggle:hover{
+                background: rgba(0, 22, 121, 0.125);
+                color: rgba(71, 71, 71, 0.4);
+            }
+            #siteOptions.lessOptions,  #pageOptions.lessOptions{
+                display: none;
+            }
+            #messages{
+                position: absolute;
+                transition: opacity 0.75s;
+                opacity: 0;
+                height: 100%;
+            }
+            #messages:hover{
+                cursor: default;
+            }
+        </style>
+    </head>
+    <body class="lessOptions">
+        <div id="content">
+            <div id="reFont"></div>
+            <div id="reFontOverlay"></div>
+            <label class="enabled">
+                <input name="enabled" type="checkbox">
+                <span class="slide"></span>
+            </label>
+            <div id="alt"></div>
+            <form id="browserAction">
+                <div id="globalOptions">
+                    <a class="st">Font:</a><br>
+                    <div id="gfc">
+                    <select name="globalFont" class="fontSelect">
+                        <option value="">Default Font</option>
+                    </select>
+                    </div>
+                </div>
+                <br>
+                <div id="siteOptions" class="lessOptions">
+                    <a class="st">Site Font:</a><br>
+                    <select name="siteFont"class="fontSelect">
+                        <option value="">Default Font</option>
+                        <option value="_inheritGlobalFont" checked>Same as Global Font</option>
+                    </select>
+                </div>
+                <br>
+                <div id="pageOptions" class="lessOptions">
+                    <a class="st">Page Font:</a><br>
+                    <select name="pageFont"class="fontSelect">
+                        <option value="">Default Font</option>
+                        <option value="_inheritGlobalFont">Same as Global Font</option>
+                        <option value="_inheritSiteFont">Same as Site Font</option>
+                    </select>
+                </div>
+                <div id="lessOptionsToggle">Show More</div>
+            </form>
+            <div id="mgmtContainer">
+                <div id="messages"></div>
+                <img id="openManagement" class="openMgmt" href="#" alt="More Settings" title="More Settings" src="settings.png">
+                <br>
+                <!--<a id="whitelistManagement" class="openMgmt" href="#">Manage Whitelist</a>
+                <br>
+                <a id="fontManagement" class="openMgmt" href="#">Manage Fonts</a>
+                <br>-->
+                <img id="getFonts" class="openMgmt" href="#" alt="Add More Fonts" title="Add More Fonts" src="add.png">
+            </div>
+        </div>
+    </body>
+</html>

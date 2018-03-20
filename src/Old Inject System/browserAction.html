@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <script src="action.ui.js">
+        </script>
+        <style>
+            body{
+                overflow: hidden;
+                background: rgb(238, 238, 238);
+                min-width: 320px;
+                height: 500px;
+            }
+            #siteOptions, #pageOptions, #globalOptions{
+                border: 1px solid rgb(215,215,215);
+                background: rgb(245, 245, 245);
+                width: 100%;
+                position: relative;
+            }
+            select{
+                border: 0;
+                padding: 15px;
+            }
+            @keyframes fall{
+                0%{
+                    opacity: 0.5;
+                    transform: translate(0,-100%) rotate(35deg);
+                }
+                50%{
+                    opacity: 0.6;
+                    transform: translate(0,-50%) rotate(-20deg);
+                }
+            }
+            #browserAction{
+                animation: fade 0.3s cubic-bezier(0.05, 0.82, 0.165, 0.5);
+                position: relative;
+                font-family: Arial, Sans-Serif;
+                overflow: hidden;
+                left: 0px;
+                top: 20px;
+            }
+            #alt{
+                animation: fall 0.6s cubic-bezier(0.75, 0, 0.6, 0.5);
+                position: relative;
+                font-family: Courier New, Courier, monospace;
+            }
+            .fontSelect, [type="button"]{
+                width: 100%;
+                color: blue;
+            }
+            .openMgmt{
+                color: black;
+            }
+            .openMgmt:hover{
+                color: blue;
+            }
+            .openMgmt:active{
+                color: green;
+            }
+            #reFont{
+                position: relative;
+                width: 100%;
+                left: 0px;
+                top: 0px;
+                background: white;
+                box-shadow: 0px 2px 3px black;
+            }
+
+        </style>
+    </head>
+    <body>
+        <div id="content">
+            <div><h1 id="reFont">ReFont</h1></div>
+            <div id="alt"></div>
+            <form id="browserAction">
+                <div id="globalOptions">
+                    <a class="st">Global Options</a><br>
+                    <label for="enabled">Refont websites:</label>
+                    <input name="enabled" type="checkbox">
+                    <br>
+                    <div id="gfc">
+                    <label for="globalFont">Global Font:</label>
+                    <select name="globalFont" class="fontSelect">
+                        <option value="">Disable Global Font</option>
+                    </select>
+                    </div>
+                </div>
+                <br>
+                <div id="siteOptions">
+                    <a class="st">Site Options</a><br>
+                    <input name="whitelistSite" type="button" value="Loading...">
+                    <br>
+                    <label for="siteFont">Font used on this site:</label>
+                    <select name="siteFont"class="fontSelect">
+                        <option value="_inheritGlobalFont">Use global font.</option>
+                    </select>
+                </div>
+                <br>
+                <div id="pageOptions">
+                    <a class="st">Page Options</a><br>
+                    <input name="whitelistPage" type="button" value="Error!">
+                    <br>
+                    <label for="pageFont">Font used on this page:</label>
+                    <select name="pageFont"class="fontSelect">
+                        <option value="_inheritGlobalFont">Use global font.</option>
+                        <option value="_inheritSiteFont">Use site font.</option>
+                    </select>
+                </div>
+                <a id="openManagement" class="openMgmt" href="#">More Settings</a>
+                <br>
+                <!--<a id="whitelistManagement" class="openMgmt" href="#">Manage Whitelist</a>
+                <br>
+                <a id="fontManagement" class="openMgmt" href="#">Manage Fonts</a>
+                <br>-->
+                <a id="getFonts" class="openMgmt" href="#">Get more fonts</a>
+            </form>
+        </div>
+    </body>
+</html>

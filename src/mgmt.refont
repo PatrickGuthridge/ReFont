@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <script src="mgmt.ui.js"></script>
+        <style class="previewFont"></style>
+        <style>
+            body{
+                font-family: sans-serif;
+                overflow-x: hidden;
+            }
+            .selectorFix{
+                position: relative;
+                height: 475px;
+            }
+            #googleFonts{
+                position: absolute;
+                height: 400px;
+                width: 35%;
+                overflow-y: scroll;
+                padding: 15px;
+                right: 10px;
+                top: 75px;
+            }
+            #googleFonts, #installedFonts{
+                border: 0;
+                background: rgba(0, 0, 0, 0.1);
+                border-radius: 5px;
+                transition: 0.25s;
+                overflow-x: hidden;
+            }
+            #installedFonts{
+                position: absolute;
+                height: 400px;
+                width: 35%;
+                overflow-y: scroll;
+                padding: 15px;
+                left: 10px;
+                top: 75px;
+            }
+            #betaInput{
+                width: 90%;
+                padding: 10px;
+                background: 0;
+                border: 0;
+                position: absolute;
+                left: 50%;
+                transform: translate(-50%);
+                border-radius: 25%;
+                transition: 0.25s linear;
+            }
+            
+            #betaInput:hover{
+                transition: 1s cubic-bezier(0.165, 0.84, 0.44, 1);
+                background: rgba(255, 255, 255, 0.25);
+                border-radius: 20px;
+            }
+            #betaInput:focus{
+                transition: 0.2s linear !important;
+                background: rgba(255, 255, 255, 0.5);
+                border-radius: 3px;
+            }
+            .manualRemoteFont{
+                position: relative;
+                padding-top: 30px;
+            }
+            .lheading{
+                position: absolute;
+                left: 10px;
+                top: 0px;
+            }
+            .gheading{
+                position: absolute;
+                right: 10px;
+                top: 0px;
+                text-align: right;
+                overflow-wrap: normal;
+            }
+            #add, #rem{
+                position: fixed;
+                left: 50%;
+                transform: translateX(-50%);
+                top: 250px;
+                width: 20%;
+                height: auto;
+                padding-top: 10px;
+                padding-bottom: 10px;
+                z-index: 1;
+            }
+            #add{
+                top: 200px;
+            }
+            .indent{
+                text-indent: 30px;
+            }
+            .variant{
+                display: none;
+            }
+            button:active, input[type="button"]:active{
+                transition: all 0.75s linear !important;
+                color: blue;
+                background-color: transparent !important;
+                border-radius: 100% !important;
+            }
+.tooltiptext {
+    visibility: hidden;
+    background-color: rgba(85, 85, 85, 0.9);
+    color: #fff;
+    border-radius: 6px;
+    padding: 5px;
+    padding-left: 10px;
+    padding-right: 10px;
+    z-index: 1;
+    opacity: 0;
+    transition: opacity 0.4s ease-out;
+    position: absolute;
+    top: 57px;
+    left: 50%;
+    transform: translateX(-50%);
+    text-align: center;
+}
+.tooltiptext.active {
+    visibility: visible;
+    opacity: 1;
+}
+    .hidden{
+        display: none;
+    }
+    img[src="loading.gif"]{
+        transform: translate(-50%, -50%);
+        top: 50%;
+        left: 50%;
+        position: fixed;
+        width: 7.5%;
+    }
+    .feedback{
+        position: absolute;
+        right: 15px;
+        top: 0px;
+        background: rgba(167, 167, 167, 0.125);
+        border-radius: 2px;
+        padding: 10px;
+    }
+    button, input[type='button']{
+        border: 0;
+        background: rgba(0, 0, 0, 0.25);
+        border-radius: 5px;
+        padding: 6px;
+        margin: 5px;
+        cursor: pointer;
+        transition: 0.3s;
+    }
+    button:hover, input[type='button']:hover{
+        background: rgba(70, 70, 70, 0.25);
+        border-radius: 0px;
+    }
+    input[type='checkbox']{
+        opacity: 0.3;
+        cursor: pointer;
+        transition: 0.25s;
+    }
+    input[type='checkbox']:hover{
+        opacity: 1;
+    }
+    h2, a{
+        -moz-user-select: none;
+    }
+    .small{
+        font-size: 10px;
+    }
+        </style>
+        <title>mgmt.refont</title>
+    </head>
+    <body>
+        <img alt="Loading..." src="loading.gif">
+    </body>
+</html>

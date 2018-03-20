@@ -1,0 +1,45 @@
+{
+    
+      "manifest_version": 2,
+      "name": "ReFont",
+      "version": "1.2.1",
+    
+      "description": "Change the font of any website to one of your choice!",
+    
+      "icons": {
+        "64": "Pict64.png",
+        "128": "Pict128.png"
+      },
+      "background": {
+        "scripts": ["refont.js"]
+      },
+      "browser_action": {
+        "default_title": "ReFont",
+        "default_icon": "Pict64.png",
+        "default_popup": "browserAction.html"
+      },
+      "content_scripts": [
+        {
+          "matches": ["<all_urls>"],
+          "js": ["frontend.js"],
+          "run_at": "document_start"
+        }
+      ],
+      "permissions": [
+        "<all_urls>",
+        "*://*/*",
+        "storage",
+        "tabs"
+      ],
+      "options_ui": {
+        "page": "mgmt.refont#/general",
+        "open_in_tab": true
+      },
+      "applications": {
+        "gecko": {
+            "id": "refont@c_ext",
+            "strict_min_version": "52.0"
+        }
+      }
+    
+}
