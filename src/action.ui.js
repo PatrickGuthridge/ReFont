@@ -168,6 +168,9 @@ function save(e) {
     }
   }
   function forTheSite(message){
+    if(message.tabChange){
+      window.location.reload();
+    }
     if(message.font){
     console.log("%c[Front End] Recieved data for browser action",'background: white; color: purple');
     var fls = message.font;

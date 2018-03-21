@@ -22,10 +22,11 @@
         <br>
         <div id="v1-3">
             <h1>v1.3</h1>
-            <li>Finished UX / Sett`ings UI.</li>
+            <li>Finished UX / Settings UI.</li>
             <li>Fixed a bug where update notification did not show in some circumstances.</li>
             <li>Fixed the position of the ReFont logo.</li>
             <li>Prevented text highlighting on browser action.</li>
+            <li>Fixed issues where the browserAction did not repond to changes in tabs. This may have solved some performance issues.</li>
         </div>
         <br>
         <div id="v1-2">

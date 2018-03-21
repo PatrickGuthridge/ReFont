@@ -1,4 +1,5 @@
 var host = browser;
+var browserActionLastMessage;
 var system = {
     enabled: true
 }
@@ -293,6 +294,7 @@ function frontEndHandler(request, sender, sendResponse) {
         })
         x.then(function(tabs){
             console.log("%c[System] Preparing Data for Browser Action.",'color: white; background: black');
+            browserActionLastMessage = tabs[0].url;
             var f = match(tabs[0].url);
             host.runtime.sendMessage({font: f, curr: tabs[0].url})
         });
@@ -400,3 +402,19 @@ dataExistanceQuery.then(function(value){
         console.log("%c[System] Restored settings from previous session.",'color: white; background: black');
     }
 }, function(error){console.exception(`${error}`)});
+
+browser.tabs.onUpdated.addListener(function(e){
+    browser.tabs.get(e).then(function(tab){
+        if(browserActionLastMessage != tab.url){
+            browserActionLastMessage = tab.url;
+            browser.runtime.sendMessage({
+                tabChange: " "
+            });
+        }
+    });
+});
+browser.tabs.onHighlighted.addListener(function(e){
+    browser.runtime.sendMessage({
+        tabChange: " "
+    });
+});
