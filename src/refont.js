@@ -88,7 +88,6 @@ var match = function(e,preprocessor){
             else{
                 returnValue = [value.global.ref,value.global.weight];
             }
-            console.log(returnValue)
             return {
                 f: returnValue[0],
                 w: returnValue[1]
@@ -155,7 +154,10 @@ if(e == "library"){
                     use: ["serif"],
                     weight: "normal"
                 }
-            ]
+            ],
+            systemSettings: {
+                enabled: true
+            },
         }
     });
     console.log("%c [Settings] Created new font library.",'background: grey; color: black');
@@ -194,6 +196,9 @@ if(e == "lists"){
                     font: ""
                 },
             ]
+        },
+        systemSettings: {
+            enabled: true
         }
     });
     console.log("% c[Settings] Created new fontlist.",'background: grey; color: black');
@@ -264,6 +269,10 @@ function frontEndHandler(request, sender, sendResponse) {
         console.log("");
         console.log("%c[System] Preparing Data for: '" + sender.url + "'",'color: lightblue');
             var sendFont = match(sender.url,true);
+            if(request.last[0] == sendFont.f[0] && system.enabled == true){
+                console.log("%c[System] Not Changed - Not modified - " + sender.url,'color: red');
+                return;
+            }
             var fontCode = "";
             var externalFont = null;
             for(i = 0; i < library.fonts.length; i++){
@@ -279,27 +288,27 @@ function frontEndHandler(request, sender, sendResponse) {
                 }
             }
             fontCode += "*{font-family: " + sendFont.f + ", fontAwesome !important;}";
-            console.log(sendFont.w)
             console.log("%c[System] Exec " + fontCode,'background: black; color: blue');
-            if(system.enabled == true){
-                host.tabs.insertCSS(
-                    sender.tab.id,
-                    {
-                        code: fontCode,
-                        runAt: "document_start",
-                        allFrames: true
-                    }
-                );
-                sendResponse({
-                    exec: fontCode
-                });
-            }
-        if(system.enabled == false){
-            console.log("%c[System] Not modified - " + sender.url,'color: red')
-            sendResponse("disabled");
-        }
-        else{
+        if(system.enabled == true){
+            host.tabs.insertCSS(
+                sender.tab.id,
+                {
+                    code: fontCode,
+                    runAt: "document_start",
+                    allFrames: true
+                }
+            );
+            sendResponse({
+                exec: fontCode,
+                last: sendFont.f
+            });
             console.log("%c[System] Modified - " + sender.url, 'color: green;');
+        }
+        else if(system.enabled == false){
+            console.log("%c[System] Disabled - Not modified - " + sender.url,'color: red')
+            sendResponse({
+                last: [false]
+            });
         }
         console.log("");
         if((request.reFont != fontCode && request.reFont != "!") || system.enabled == false){
@@ -331,7 +340,7 @@ function frontEndHandler(request, sender, sendResponse) {
             console.log("[System] reFonted: '" + sender.url + "' to","'" + request.message + "'");
         }
         else if(request.messageType == "err"){
-            console.exception("[Front End]" + request.message)
+            console.exception("[System] Was not ready for request.");
         }
         else{
             console.log(request.message);
@@ -379,7 +388,9 @@ function frontEndHandler(request, sender, sendResponse) {
 }
 function frontEnd(tabs){
         for (let tab of tabs) {
-            host.tabs.sendMessage(tab.id,"msg");
+                host.tabs.sendMessage(tab.id,"msg").catch(function(e){
+                    console.log("[System] Could not access tab.",tab.id);
+                });
         }
         switch(system.enabled){
             case true:
@@ -404,13 +415,10 @@ function frontEnd(tabs){
         
 }
 function sysInfo(e){
-    console.log(e)
     if(e.lists){
-        console.log("getLists")
         getLists(e);
     }
     if(e.systemSettings){
-        console.log("system")
         var getting = host.storage.local.get(
             "systemSettings"
         );
@@ -447,18 +455,22 @@ browser.tabs.onUpdated.addListener(function(id,change,e){
                     browserActionLastMessage = tab.url;
                     browser.runtime.sendMessage({
                         tabChange: " "
+                    }).then(function(){
+                        console.log("[System] Tab change was sent.");
+                    }).catch(function(){
+                        console.log("[System] Tab change was not sent.");
                     });
-                    console.log("[System] Tab change was sent.")
                 }
             });
-        }
-        else{
-            console.log("[System] Tab change was not sent.")
         }
     });
 });
 browser.tabs.onHighlighted.addListener(function(e){
     browser.runtime.sendMessage({
         tabChange: " "
+    }).then(function(){
+        console.log("[System] Tab change was sent.");
+    }).catch(function(){
+        console.log("[System] Tab change was not sent.");
     });
 });

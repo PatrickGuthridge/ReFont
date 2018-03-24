@@ -95,7 +95,6 @@ function save(e) {
       document.querySelector("#browserAction").style.display = "none";
       document.querySelector("#alt").innerText = "Just a moment...";
       window.location.hash = "reload";
-      window.location.reload();
     }
     else{
       if(e.target.checked != true){
@@ -106,15 +105,22 @@ function save(e) {
         document.querySelector("#browserAction").className = "active";
         document.querySelector("#reFontOverlay").style.opacity = 1;
       }
+      host.storage.local.set({
+        systemSettings: {
+          enabled: document.querySelector("input[name='enabled']").checked,
+        }
+      });
+      return;
     }
     host.storage.local.set({
       systemSettings: {
-        enabled: document.querySelector("input[name='enabled']").checked,
+        enabled: true
       },
       lists: {
         fontlist: lists.fontlist
       }
     });
+    window.location.reload();
 }
   function getFontData() {
     var Font;

@@ -1,5 +1,6 @@
 var curr = {
-  exec: "!"
+  exec: "!",
+  last: [null]
 }
 function extLog(log,type){
   var data = browser.runtime.sendMessage({
@@ -12,14 +13,19 @@ function error(error) {
   extLog(` ${error}`,"err");
 }
   function handleFontResponse(message) {
-    if(message == "whitelisted" || message == "disabled"){
-      return;
+    if(message.exec){
+      console.log(curr.exec)
+      curr.exec = message.exec;
     }
-    curr.exec = message.exec;
+    if(message.last){
+      curr.last = message.last;
+      console.log(curr.last)
+    }
   }
   function getFontData(){
     var data = browser.runtime.sendMessage({
-      reFont: curr.exec
+      reFont: curr.exec,
+      last: curr.last
     });
     data.then(handleFontResponse, error);  
   }

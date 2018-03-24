@@ -313,6 +313,9 @@ function setLocation(e){
                                         },
                                         lists: {
                                             fontlist: fontlist
+                                        },
+                                        systemSettings: {
+                                            enabled: true
                                         }
                                     });
                                     window.location.reload();
@@ -630,6 +633,9 @@ function setLocation(e){
                                 browser.storage.local.set({
                                     lists: {
                                         fontlist: fontlist
+                                    },
+                                    systemSettings: {
+                                        enabled: true
                                     }
                                 });
                                 window.location.reload();
