@@ -42,8 +42,6 @@ function openMgmt(e){
 }
 
 function preSave(e){
-  document.querySelector("#browserAction").style.display = "none";
-  document.querySelector("#alt").innerText = "Just a moment...";
   if(e.originalTarget.value == "_add"){
     openMgmt({
       originalTarget:{
@@ -93,15 +91,9 @@ function preSave(e){
   save(e);
 }
 function save(e) {
-    host.storage.local.set({
-      systemSettings: {
-        enabled: document.querySelector("input[name='enabled']").checked,
-      },
-      lists: {
-        fontlist: lists.fontlist
-      }
-    });
     if(e.target.name != "enabled"){
+      document.querySelector("#browserAction").style.display = "none";
+      document.querySelector("#alt").innerText = "Just a moment...";
       window.location.hash = "reload";
       window.location.reload();
     }
@@ -115,6 +107,14 @@ function save(e) {
         document.querySelector("#reFontOverlay").style.opacity = 1;
       }
     }
+    host.storage.local.set({
+      systemSettings: {
+        enabled: document.querySelector("input[name='enabled']").checked,
+      },
+      lists: {
+        fontlist: lists.fontlist
+      }
+    });
 }
   function getFontData() {
     var Font;
