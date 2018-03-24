@@ -13,7 +13,7 @@ function hostURL(e){
     return browser.runtime.getURL(e);
 }
 function error(error) {
-    console.exception(`[System] ${error}`);
+    //debug
 }
 
 var fontlist = [];
@@ -100,13 +100,13 @@ var match = function(e,preprocessor){
         }
 }
 function assignLists(e){
-    console.log("%c [Settings] Lists were updated", "background: grey; color: black;")
+    console.log("%c [Settings] Lists were updated", "background: grey; color: black;");
     whitelist = e.lists.whitelist;
     fontlist = e.lists.fontlist;
     library = e.library;
     console.log("[System] Status:\n\tFontlist[",fontlist,"];\n\tLibrary[",library,"];");
 }
-function getLists(){
+function getLists(e){
     var gettingItem = host.storage.local.get([
         "lists", "library"
     ]);
@@ -403,16 +403,23 @@ function frontEnd(tabs){
         }
         
 }
-function sysInfo(){
-    getLists();
-    var getting = host.storage.local.get(
-        "systemSettings"
-    );
-    getting.then(function(e){
-        system = e.systemSettings;
-        host.tabs.query({}).then(frontEnd,error);
-    }, error);
-    return;
+function sysInfo(e){
+    console.log(e)
+    if(e.lists){
+        console.log("getLists")
+        getLists(e);
+    }
+    if(e.systemSettings){
+        console.log("system")
+        var getting = host.storage.local.get(
+            "systemSettings"
+        );
+        getting.then(function(e){
+            system = e.systemSettings;
+            host.tabs.query({}).then(frontEnd,error);
+        }, error);
+        return;
+    }
 }
 var dataExistanceQuery = host.storage.local.get([
     "lists", "systemSettings"
@@ -429,13 +436,24 @@ dataExistanceQuery.then(function(value){
     }
 }, function(error){console.exception(`${error}`)});
 
-browser.tabs.onUpdated.addListener(function(e){
-    browser.tabs.get(e).then(function(tab){
-        if(browserActionLastMessage != tab.url){
-            browserActionLastMessage = tab.url;
-            browser.runtime.sendMessage({
-                tabChange: " "
+browser.tabs.onUpdated.addListener(function(id,change,e){
+    host.tabs.query({
+        currentWindow: true,
+        active: true
+    }).then(function(activeTab){
+        if(activeTab[0].id == e.id){
+            browser.tabs.get(e.id).then(function(tab){
+                if(browserActionLastMessage != tab.url){
+                    browserActionLastMessage = tab.url;
+                    browser.runtime.sendMessage({
+                        tabChange: " "
+                    });
+                    console.log("[System] Tab change was sent.")
+                }
             });
+        }
+        else{
+            console.log("[System] Tab change was not sent.")
         }
     });
 });

@@ -42,6 +42,8 @@ function openMgmt(e){
 }
 
 function preSave(e){
+  document.querySelector("#browserAction").style.display = "none";
+  document.querySelector("#alt").innerText = "Just a moment...";
   if(e.originalTarget.value == "_add"){
     openMgmt({
       originalTarget:{
@@ -324,7 +326,8 @@ document.querySelector("#getFonts").addEventListener("mouseout", function(){
     document.querySelector("#messages").innerText = "Just updated to v" + currVersion;
   }
 });
-
+    document.querySelector("#browserAction").style.display = "";
+    document.querySelector("#alt").innerText = "";
     console.log("[Front End] Data Object:",site); 
     var error = document.createElement("h3");
     if(site.name == undefined){
@@ -340,7 +343,7 @@ document.querySelector("#getFonts").addEventListener("mouseout", function(){
       getFontData();
       return;
     }
-    
+
     document.querySelector("#reFontOverlay").style.display = "none";
     document.body.classList.add("alt");
     document.querySelector("#browserAction").outerHTML = "";
@@ -348,6 +351,8 @@ document.querySelector("#getFonts").addEventListener("mouseout", function(){
   }
   }
   function restore() {
+    document.querySelector("#browserAction").style.display = "none";
+    document.querySelector("#alt").innerText = "Loading";
     host.storage.local.get([
       "lists", "library"
     ]).then(function(e){
