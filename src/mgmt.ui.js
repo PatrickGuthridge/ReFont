@@ -1,5 +1,5 @@
 var host = browser;
-//Temp betaInput
+//Temp  Unable to connect. Check your internet connection. active
 //var betaExtFont = "<div class=\"manualRemoteFont\"><br><input id=\"restoreLibrary\" type=\"button\" value=\"Restore default font library.\"><br><h2>Manual Remote Font Install</h1><p>Other remote fonts can be manually installed below:</p><label>Stylesheet URL (This must use the HTTPS protocol):</label><input id=\"betaExtUrl\"><br><label>User Font Name (This will show in the library as the font name):</label><input id=\"betaExtName\"><br><label>System Font Name (Specified by font provider):</label><input id=\"betaExtFont\"><br><label>Backup Font(s)[separated by commas]:</label><input id=\"betaExtBak\"><br><button id=\"betaExtAdd\">Add External Font</button></div>";
 function restore(){
     var element = document.createElement("div");
@@ -27,7 +27,7 @@ function showFonts(){
     element.innerHTML = "<div class=\"localFont\"><input id=\"betaInput\" placeholder=\"Search\"><span class=\"tooltiptext\">Enter a font name or URL</span><!--<button id=\"betaInputAdd\">Add local font</button><button id=\"betaInputRemove\">Remove font</button>--></div>";
     document.querySelector("#googleFonts").appendChild(element);
     document.querySelector("#betaInput").addEventListener("mouseover", function(){
-        document.querySelector(".tooltiptext").classList.add("active")
+        document.querySelector(".tooltiptext").classList.add("active");
     });
     document.querySelector("#betaInput").addEventListener("mouseout", function(){
         document.querySelector(".tooltiptext").classList.remove("active")
@@ -68,12 +68,19 @@ function showFonts(){
             }
             catch(e){
                 console.log("Not connected to Google Fonts.");
-                document.querySelector(".tooltiptext").innerText = "Unable to connect. Check your internet connection."
+                document.querySelector(".tooltiptext").innerText = "Click 'Add Font to library' Add fonts while not connected."
+                document.querySelector(".tooltiptext").style.width = "90%";
             }
         }
     });
     var xhttp = new XMLHttpRequest;
     xhttp.onreadystatechange = function() {
+        if(this.readyState == 4 && this.status == 0){
+            var msg = document.createElement("div");
+            msg.id = "notConnected";
+            msg.innerText = "Failed to connect to Google Fonts."
+            document.querySelector(".localFont").appendChild(msg);
+        }
         if (this.readyState == 4 && this.status == 200) {
             fonts = JSON.parse(this.responseText).items;
             var all = document.createElement("div");
@@ -852,6 +859,35 @@ function resize(){
             document.querySelector("#googleFonts").classList.remove("small");
             document.querySelector("#installedFonts").classList.remove("small");
             document.querySelector(".tooltiptext").style.fontSize = "";
+        }
+    //other
+        if(window.innerHeight <= 375){
+            document.querySelector("#add").style.top = "150px";
+            document.querySelector("#rem").style.top = "190px";
+            document.querySelector("#installedFonts").style.marginTop = "20px";
+            document.querySelector("#googleFonts").style.marginTop = "20px";
+        }
+        else{
+            document.querySelector("#add").style.top = "";
+            document.querySelector("#rem").style.top = "";
+            document.querySelector("#installedFonts").style.marginTop = "";
+            document.querySelector("#googleFonts").style.marginTop = "";
+        }
+        if(window.innerHeight >= 930){
+            document.querySelector("#installedFonts").style.position = "fixed";
+            document.querySelector("#installedFonts").style.height = "50%";
+            document.querySelector("#installedFonts").style.marginTop = "50px";
+            document.querySelector("#googleFonts").style.position = "fixed";
+            document.querySelector("#googleFonts").style.height = "50%";
+            document.querySelector("#googleFonts").style.marginTop = "50px";
+        }
+        else{            
+            document.querySelector("#installedFonts").style.position = "";
+            document.querySelector("#installedFonts").style.height = "";
+            document.querySelector("#installedFonts").style.marginTop = "";
+            document.querySelector("#googleFonts").style.position = "";
+            document.querySelector("#googleFonts").style.height = "";
+            document.querySelector("#googleFonts").style.marginTop = "";
         }
     }
     catch(e){

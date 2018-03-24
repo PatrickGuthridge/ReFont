@@ -21,26 +21,30 @@ var library;
 function globalFont(){
     for(i in library.fonts){
         if(library.fonts[i].name == fontlist[0].font){
-            return [library.fonts[i].use, library.fonts[i].name];
+            return [library.fonts[i].use, library.fonts[i].name,library.fonts[i].weight];
         }
     }
 }
 var match = function(e,preprocessor){
         var url = e.split(":").splice(1)[0].split("?")[0];
+        var global = globalFont();
         var value = {
             global: {
-                ref: globalFont()[0],
-                font: globalFont()[1],
-                position: fontlist[0]
+                ref: global[0],
+                font: global[1],
+                weight: global[3],
+                position: 0
             },
             url: {
                 font: null,
                 ref: null,
+                weight: "",
                 position: null,
             },
             site: {
                 font: null,
                 ref: null,
+                weight: "",
                 position: null,
             },
         }
@@ -51,19 +55,23 @@ var match = function(e,preprocessor){
                     if(font.font == library.fonts[f].name){
                         value.url.ref = library.fonts[f].use;
                         value.url.font = library.fonts[f].name;
+                        value.url.weight = library.fonts[f].weight;
                     }
                 }
                 value.url.position = i;
             }
             if(font.type == "url" && font.font == "_inheritGlobalFont"){
-                value.url.ref = globalFont()[0];
+                value.url.ref = global[0];
                 value.url.font = "_inheritGlobalFont";
+                value.url.weight = global[3];
+                value.url.position = i;
             }
             else if(font.type == "site" && RegExp(font.resource).test(url) == true){
                 for(f in library.fonts){
                     if(font.font == library.fonts[f].name){
                         value.site.ref = library.fonts[f].use;
                         value.site.font = library.fonts[f].name;
+                        value.site.weight = library.fonts[f].weight;
                     }
                 }
                 value.site.position = i;
@@ -72,15 +80,20 @@ var match = function(e,preprocessor){
         if(preprocessor == true){
             var returnValue;
             if(value.url.font != null){
-                returnValue = value.url.ref;
+                returnValue = [value.url.ref,value.url.weight];
             }
             else if(value.site.font != null){
-                returnValue = value.site.ref;
+                returnValue = [value.site.ref,value.site.weight];
             }
             else{
-                returnValue = value.global.ref;
+                returnValue = [value.global.ref,value.global.weight];
             }
-            return returnValue;
+            console.log(returnValue)
+            return {
+                f: returnValue[0],
+                w: returnValue[1]
+            }
+            ;
         }
         else{
             return value;
@@ -108,33 +121,39 @@ if(e == "library"){
                 {
                     name: "",
                     type: "disabled",
-                    use: [""]
+                    use: [""],
+                    weight: ""
                 },
                 {
                     name: "Cursive",
                     type: "preinstalled",
-                    use: ["cursive"]
+                    use: ["cursive"],
+                    weight: "normal"
     
                 },
                 {
                     name: "Monospace",
                     type: "preinstalled",
-                    use: ["monospace"]
+                    use: ["monospace"],
+                    weight: "normal"
                 },
                 {
                     name: "Sans Serif",
                     type: "preinstalled",
-                    use: ["sans-serif"]
+                    use: ["sans-serif"],
+                    weight: "normal"
                 },
                 {
                     name: "Script",
                     type: "preinstalled",
-                    use: ["script"]
+                    use: ["script"],
+                    weight: "normal"
                 },
                 {
                     name: "Serif",
                     type: "preinstalled",
-                    use: ["serif"]
+                    use: ["serif"],
+                    weight: "normal"
                 }
             ]
         }
@@ -201,33 +220,39 @@ host.storage.local.set({
             {
                 name: "",
                 type: "disabled",
-                use: [""]
+                use: [""],
+                weight: ""
             },
             {
                 name: "Cursive",
                 type: "preinstalled",
-                use: ["cursive"]
+                use: ["cursive"],
+                weight: "normal"
 
             },
             {
                 name: "Monospace",
                 type: "preinstalled",
-                use: ["monospace"]
+                use: ["monospace"],
+                weight: "normal"
             },
             {
                 name: "Sans Serif",
                 type: "preinstalled",
-                use: ["sans-serif"]
+                use: ["sans-serif"],
+                weight: "normal"
             },
             {
                 name: "Script",
                 type: "preinstalled",
-                use: ["script"]
+                use: ["script"],
+                weight: "normal"
             },
             {
                 name: "Serif",
                 type: "preinstalled",
-                use: ["serif"]
+                use: ["serif"],
+                weight: "normal"
             }
         ]
     }
@@ -242,18 +267,19 @@ function frontEndHandler(request, sender, sendResponse) {
             var fontCode = "";
             var externalFont = null;
             for(i = 0; i < library.fonts.length; i++){
-                if(library.fonts[i].use == sendFont && library.fonts[i].location){
-                    console.log("%c[System] Matched Font for '" + sendFont[0] + "' to '" + library.fonts[i].location + "'",'color: lightblue');
+                if(library.fonts[i].use == sendFont.f && library.fonts[i].location){
+                    console.log("%c[System] Matched Font for '" + sendFont.f[0] + "' to '" + library.fonts[i].location + "'",'color: lightblue');
                     externalFont = library.fonts[i].location;
                     fontCode += "@import url('" + externalFont + "');";
                 }
-                if(library.fonts[i].use == sendFont && library.fonts[i].fontLocation){
-                    console.log("%c[System] Matched Font for '" + sendFont[0] + "' to '" + library.fonts[i].fontLocation + "'",'color: lightblue');
+                if(library.fonts[i].use == sendFont.f && library.fonts[i].fontLocation){
+                    console.log("%c[System] Matched Font for '" + sendFont.f[0] + "' to '" + library.fonts[i].fontLocation + "'",'color: lightblue');
                     externalFont = library.fonts[i].fontLocation;
                     fontCode += "@font-face{font-family: " + library.fonts[i].use[0] + ";src: url(" + externalFont + ");}";
                 }
             }
-            fontCode += "*{font-family: " + sendFont + ", fontAwesome !important;}"
+            fontCode += "*{font-family: " + sendFont.f + ", fontAwesome !important;}";
+            console.log(sendFont.w)
             console.log("%c[System] Exec " + fontCode,'background: black; color: blue');
             if(system.enabled == true){
                 host.tabs.insertCSS(
