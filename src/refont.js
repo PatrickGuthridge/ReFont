@@ -387,10 +387,23 @@ function frontEndHandler(request, sender, sendResponse) {
     }
 }
 function frontEnd(tabs){
+        console.log("[System] Other Tabs:",tabs);
+        var doLater = [];
         for (let tab of tabs) {
+            if(tab.status == "complete"){
                 host.tabs.sendMessage(tab.id,"msg").catch(function(e){
                     console.log("[System] Could not access tab.",tab.id);
                 });
+            }
+            else{
+                doLater.push(tab);
+            }
+        }
+        console.log("[System] Reserved Tabs:",doLater);
+        for(let tab of doLater){
+            host.tabs.sendMessage(tab.id,"msg").catch(function(e){
+                console.log("[System] Could not access tab.",tab.id);
+            });
         }
         switch(system.enabled){
             case true:
@@ -424,7 +437,28 @@ function sysInfo(e){
         );
         getting.then(function(e){
             system = e.systemSettings;
-            host.tabs.query({}).then(frontEnd,error);
+            browser.tabs.query({
+                active: true
+            }).then(function(tabs){
+                console.log("[System] Active Tabs:",tabs);
+                for(let tab of tabs){
+                    host.tabs.sendMessage(tab.id,"msg").catch(function(e){
+                        console.log("[System] Could not access tab.",tab.id);
+                    });
+                    try{
+                        host.tabs.query({
+                            active: false,
+                            discarded: true,
+                        }).then(frontEnd,error);
+                    }
+                    catch(e){
+                        console.exception(e.message)
+                        host.tabs.query({
+                            active: false
+                        }).then(frontEnd,error);
+                    };
+                }
+            });
         }, error);
         return;
     }
