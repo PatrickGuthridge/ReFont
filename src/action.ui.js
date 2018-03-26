@@ -5,6 +5,7 @@ var site;
 var lists;
 var library;
 var updates = false;
+var isSettingsChange = false;
 var currVersion;
 if(window.location.hash != "#reload"){
   var x = document.createElement("style");
@@ -97,6 +98,7 @@ function save(e) {
       window.location.hash = "reload";
     }
     else{
+      isSettingsChange = true;
       if(e.target.checked != true){
         document.querySelector("#browserAction").className = "dull";
         document.querySelector("#reFontOverlay").style.opacity = 0;
@@ -120,7 +122,6 @@ function save(e) {
         fontlist: lists.fontlist
       }
     });
-    window.location.reload();
 }
   function getFontData() {
     var Font;
@@ -175,7 +176,20 @@ function save(e) {
       });
     }
   }
-  function forTheSite(message){
+  function forTheSite(message,sender,sendResponse){
+    if(message.reloadBrowserAction){
+      console.log(sender)
+      sendResponse(true);
+      if(isSettingsChange == false){
+        window.location.reload();
+        return;
+      }
+      else{
+        browser.runtime.sendMessage({
+          afterLoad: " "
+        });
+      }
+    }
     if(message.tabChange){
       window.location.reload();
     }
@@ -336,6 +350,11 @@ document.querySelector("#getFonts").addEventListener("mouseout", function(){
     document.querySelector("#alt").innerText = "";
     console.log("[Front End] Data Object:",site); 
     var error = document.createElement("h3");
+    if(window.location.hash == "#reload"){
+      browser.runtime.sendMessage({
+        afterLoad: " "
+      });
+    }
     if(site.name == undefined){
           error.innerText = ":(\nRefont can't modify this page.";
     }

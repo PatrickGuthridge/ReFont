@@ -764,6 +764,9 @@ function setLocation(e){
         window.location.reload();
     });
     }
+    browser.runtime.sendMessage({
+        afterLoad: " "
+    });
     resize();
 }
 function resize(){

@@ -270,7 +270,7 @@ function frontEndHandler(request, sender, sendResponse) {
         console.log("%c[System] Preparing Data for: '" + sender.url + "'",'color: lightblue');
             var sendFont = match(sender.url,true);
             if(request.last[0] == sendFont.f[0] && system.enabled == true){
-                console.log("%c[System] Not Changed - Not modified - " + sender.url,'color: red');
+                console.log("%c[System] No Changed - Not modified - " + sender.url,'color: red');
                 return;
             }
             var fontCode = "";
@@ -345,6 +345,20 @@ function frontEndHandler(request, sender, sendResponse) {
         else{
             console.log(request.message);
         }
+    }
+    if(request.afterLoad){
+        try{
+            host.tabs.query({
+                active: false,
+                discarded: false,
+            }).then(frontEnd,error);
+        }
+        catch(e){
+            console.exception(e.message)
+            host.tabs.query({
+                active: false
+            }).then(frontEnd,error);
+        };
     }
     if(request.open){
         var url;
@@ -442,13 +456,17 @@ function sysInfo(e){
             }).then(function(tabs){
                 console.log("[System] Active Tabs:",tabs);
                 for(let tab of tabs){
-                    host.tabs.sendMessage(tab.id,"msg").catch(function(e){
+                    host.tabs.sendMessage(tab.id,"msg").catch(function(){
                         console.log("[System] Could not access tab.",tab.id);
                     });
+                }
+                browser.runtime.sendMessage({
+                    reloadBrowserAction: " "
+                }).catch(function(e){
                     try{
                         host.tabs.query({
                             active: false,
-                            discarded: true,
+                            discarded: false,
                         }).then(frontEnd,error);
                     }
                     catch(e){
@@ -457,7 +475,7 @@ function sysInfo(e){
                             active: false
                         }).then(frontEnd,error);
                     };
-                }
+                });
             });
         }, error);
         return;
