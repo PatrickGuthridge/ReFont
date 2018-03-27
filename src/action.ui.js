@@ -98,15 +98,18 @@ function save(e) {
       window.location.hash = "reload";
     }
     else{
-      isSettingsChange = true;
-      if(e.target.checked != true){
-        document.querySelector("#browserAction").className = "dull";
-        document.querySelector("#reFontOverlay").style.opacity = 0;
+      try{
+        isSettingsChange = true;
+        if(e.target.checked != true){
+          document.querySelector("#browserAction").className = "dull";
+          document.querySelector("#reFontOverlay").style.opacity = 0;
+        }
+        else{
+          document.querySelector("#browserAction").className = "active";
+          document.querySelector("#reFontOverlay").style.opacity = 1;
+        }
       }
-      else{
-        document.querySelector("#browserAction").className = "active";
-        document.querySelector("#reFontOverlay").style.opacity = 1;
-      }
+      catch(e){}
       host.storage.local.set({
         systemSettings: {
           enabled: document.querySelector("input[name='enabled']").checked,

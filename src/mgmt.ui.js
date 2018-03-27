@@ -1,6 +1,4 @@
 var host = browser;
-//Temp  Unable to connect. Check your internet connection. active
-//var betaExtFont = "<div class=\"manualRemoteFont\"><br><input id=\"restoreLibrary\" type=\"button\" value=\"Restore default font library.\"><br><h2>Manual Remote Font Install</h1><p>Other remote fonts can be manually installed below:</p><label>Stylesheet URL (This must use the HTTPS protocol):</label><input id=\"betaExtUrl\"><br><label>User Font Name (This will show in the library as the font name):</label><input id=\"betaExtName\"><br><label>System Font Name (Specified by font provider):</label><input id=\"betaExtFont\"><br><label>Backup Font(s)[separated by commas]:</label><input id=\"betaExtBak\"><br><button id=\"betaExtAdd\">Add External Font</button></div>";
 function restore(){
     var element = document.createElement("div");
         var restore = document.createElement("button");
@@ -111,11 +109,11 @@ function showFonts(){
                 for(x = 0; x < fonts[i].variants.length; x++){
                     var variant = document.createElement("div");
                     variant.className = "variant variant-" + i + " indent";
-                    variant.innerText = fonts[i].variants[x];
                     var checkbox = document.createElement("input");
                     checkbox.id = "exlib-"+ i + "-" + x;
                     checkbox.type = "checkbox";
                     variant.appendChild(checkbox);
+                    variant.innerHTML += fonts[i].variants[x];
                     variants.appendChild(variant);
                 }
                 element.appendChild(variants);
@@ -193,23 +191,116 @@ function setLocation(e){
             var selectorFix = document.createElement("div");
             selectorFix.class = "selectorFix";
 */
-        element.innerHTML += "<div class=\"selectorFix\"><h2 class=\"lheading\">Font Library <button id=\"restoreLibrary\">Restore Default Library.</button><button id=\"exportLibrary\">Export Library.</button><button id=\"importLibrary\">Import Library.</button></h2><form id=\"installedFonts\"></form><input id=\"add\" type=\"button\" value=\"<< Add Fonts to Library\"><input id=\"rem\" type=\"button\" value=\"Remove Fonts from Library >>\"><h2 class=\"gheading\">More Fonts</h2><form id=\"googleFonts\"></form></div>";
+        element.innerHTML += "<div class=\"selectorFix\"><h2 class=\"lheading\">Font Library <button id=\"restoreLibrary\">Restore Default Library.</button><button id=\"exportLibrary\">Export Library.</button><button id=\"importLibrary\">Import Library.</button></h2><form id=\"installedFonts\"></form><input id=\"add\" type=\"button\" value=\"<< Add Fonts to Library\"><input id=\"rem\" type=\"button\" value=\"Remove Fonts from Library >>\"><h2 class=\"gheading\">More Fonts</h2><form id=\"googleFonts\"></form></div><div id=\"overlay\"></div><div id=\"editForm\"></div>";
         uiContainer.appendChild(element);
         showFonts();
         host.storage.local.get(["library"]).then(function(e){
-            var list = e.library.fonts;
+            var libraryIn = e.library.fonts;
             var all = document.createElement("div");
-            for(i = 0; i < list.length; i++){
+            for(i = 0; i < libraryIn.length; i++){
                 t = Number(i);
-                if( list[i].name != ""){
+                if( libraryIn[i].name != ""){
                     var element = document.createElement("p");
                         var checkbox = document.createElement("input");
                         checkbox.id = "lib-"+ i;
                         checkbox.type = "checkbox";
                     element.appendChild(checkbox);
                         var name = document.createElement("a");
-                        name.innerText = t + ". " + list[i].name;
+                        name.innerText = t + ". " + libraryIn[i].name;
                     element.appendChild(name);
+                        var edit = document.createElement("a");
+                        edit.id = "libedit-"+ i;
+                        edit.className = "libedit";
+                        edit.innerText = " [edit]";
+                        edit.addEventListener("click", function(e){
+                            var editFont = Number(e.target.id.replace("libedit-",""));
+                            console.log(editFont);
+                            var font = libraryIn[editFont];
+                            console.log(font)
+                            var overlay = document.querySelector("#overlay");
+                            var editForm = document.querySelector("#editForm");
+                            editForm.appendChild(document.createTextNode("Name: "));
+                                var title = document.createElement("input");
+                                title.id = "editTitle";
+                                title.value = font.name;
+                            editForm.appendChild(title);
+                            editForm.appendChild(document.createElement("br"));
+                            editForm.appendChild(document.createTextNode("Weight: "));
+                                var weightSelect = document.createElement("select");
+                                weightSelect.id = "editWeightSelect";
+                                var lighter = document.createElement("option");
+                                lighter.innerText = "Lighter";
+                                lighter.value = "lighter";
+                                if(font.weight == "lighter"){
+                                    lighter.selected = true;
+                                }
+                                weightSelect.appendChild(lighter);
+                                    var normal = document.createElement("option");
+                                    normal.innerText = "normal";
+                                    normal.value = "normal";
+                                    if(font.weight == "normal" || font.weight == undefined){
+                                        normal.selected = true;
+                                    }
+                                weightSelect.appendChild(normal);
+                                    var bold = document.createElement("option");
+                                    bold.innerText = "bold";
+                                    bold.value = "bold";
+                                    if(font.weight == "bold"){
+                                        bold.selected = true;
+                                    }
+                                weightSelect.appendChild(bold);
+                                    var bolder = document.createElement("option");
+                                    bolder.innerText = "bolder";
+                                    bolder.value = "bolder";
+                                    if(font.weight == "bolder"){
+                                        bolder.selected = true;
+                                    }
+                                weightSelect.appendChild(bolder);
+                            editForm.appendChild(weightSelect);
+                            editForm.appendChild(document.createElement("br"));
+                                var close = document.createElement("button");
+                                close.innerText = "Close";
+                                close.addEventListener("click",function(){
+                                    overlay.classList.remove("active");
+                                    editForm.classList.remove("active");
+                                    editForm.innerHTML = "";
+                                });
+                            editForm.appendChild(close);
+                            var save = document.createElement("button");
+                            save.innerText = "Save";
+                            save.addEventListener("click",function(){
+                                browser.storage.local.get(["lists"]).then(function(e){
+                                    var fList = e.lists.fontlist;
+                                    var editedFont =  Object.assign({}, font);
+                                    editedFont.name = document.querySelector("#editTitle").value;
+                                    editedFont.weight = document.querySelector("#editWeightSelect").value;
+                                    var newLibrary = libraryIn;
+                                    newLibrary[editFont] = editedFont;
+                                    for(item of fList){
+                                        console.log(item)
+                                        if(item.font == font.name){
+                                            item.font = editedFont.name;
+                                        }
+                                    }
+                                    browser.storage.local.set({
+                                        systemSettings: {
+                                            enabled: true
+                                        },
+                                        lists: {
+                                            fontlist: fList
+                                        },
+                                        library: {
+                                            fonts: newLibrary
+                                        }
+                                    });
+                                    window.location.reload();
+                                });
+                            });
+                        editForm.appendChild(save);
+                            overlay.classList.add("active");
+                            editForm.classList.add("active");
+                        });
+                    element.appendChild(edit);
                     all.appendChild(element);
                 }
             }

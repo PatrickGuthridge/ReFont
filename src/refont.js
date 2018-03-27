@@ -22,7 +22,9 @@ var library;
 function globalFont(){
     for(i in library.fonts){
         if(library.fonts[i].name == fontlist[0].font){
-            return [library.fonts[i].use, library.fonts[i].name,library.fonts[i].weight];
+            var weight = "normal";
+            if(library.fonts[i].weight) weight = library.fonts[i].weight;
+            return [library.fonts[i].use, library.fonts[i].name, weight];
         }
     }
 }
@@ -33,19 +35,19 @@ var match = function(e,preprocessor){
             global: {
                 ref: global[0],
                 font: global[1],
-                weight: global[3],
+                weight: global[2],
                 position: 0
             },
             url: {
                 font: null,
                 ref: null,
-                weight: "",
+                weight: "normal",
                 position: null,
             },
             site: {
                 font: null,
                 ref: null,
-                weight: "",
+                weight: "normal",
                 position: null,
             },
         }
@@ -56,7 +58,9 @@ var match = function(e,preprocessor){
                     if(font.font == library.fonts[f].name){
                         value.url.ref = library.fonts[f].use;
                         value.url.font = library.fonts[f].name;
-                        value.url.weight = library.fonts[f].weight;
+                        if(library.fonts[f].weight){
+                            value.url.weight = library.fonts[f].weight;
+                        }
                     }
                 }
                 value.url.position = i;
@@ -64,7 +68,9 @@ var match = function(e,preprocessor){
             if(font.type == "url" && font.font == "_inheritGlobalFont"){
                 value.url.ref = global[0];
                 value.url.font = "_inheritGlobalFont";
-                value.url.weight = global[3];
+                if(library.fonts[f].weight){
+                    value.url.weight = global[2];
+                }
                 value.url.position = i;
             }
             else if(font.type == "site" && RegExp(font.resource).test(url) == true){
@@ -72,7 +78,9 @@ var match = function(e,preprocessor){
                     if(font.font == library.fonts[f].name){
                         value.site.ref = library.fonts[f].use;
                         value.site.font = library.fonts[f].name;
-                        value.site.weight = library.fonts[f].weight;
+                        if(library.fonts[f].weight){
+                            value.url.weight = library.fonts[f].weight;
+                        }
                     }
                 }
                 value.site.position = i;
@@ -121,39 +129,33 @@ if(e == "library"){
                 {
                     name: "",
                     type: "disabled",
-                    use: [""],
-                    weight: ""
+                    use: [""]
                 },
                 {
                     name: "Cursive",
                     type: "preinstalled",
-                    use: ["cursive"],
-                    weight: "normal"
+                    use: ["cursive"]
     
                 },
                 {
                     name: "Monospace",
                     type: "preinstalled",
-                    use: ["monospace"],
-                    weight: "normal"
+                    use: ["monospace"]
                 },
                 {
                     name: "Sans Serif",
                     type: "preinstalled",
-                    use: ["sans-serif"],
-                    weight: "normal"
+                    use: ["sans-serif"]
                 },
                 {
                     name: "Script",
                     type: "preinstalled",
-                    use: ["script"],
-                    weight: "normal"
+                    use: ["script"]
                 },
                 {
                     name: "Serif",
                     type: "preinstalled",
-                    use: ["serif"],
-                    weight: "normal"
+                    use: ["serif"]
                 }
             ],
             systemSettings: {
@@ -227,38 +229,32 @@ host.storage.local.set({
                 name: "",
                 type: "disabled",
                 use: [""],
-                weight: ""
             },
             {
                 name: "Cursive",
                 type: "preinstalled",
-                use: ["cursive"],
-                weight: "normal"
-
+                use: ["cursive"] 
+                
             },
             {
                 name: "Monospace",
                 type: "preinstalled",
-                use: ["monospace"],
-                weight: "normal"
+                use: ["monospace"]
             },
             {
                 name: "Sans Serif",
                 type: "preinstalled",
-                use: ["sans-serif"],
-                weight: "normal"
+                use: ["sans-serif"]
             },
             {
                 name: "Script",
                 type: "preinstalled",
-                use: ["script"],
-                weight: "normal"
+                use: ["script"]
             },
             {
                 name: "Serif",
                 type: "preinstalled",
-                use: ["serif"],
-                weight: "normal"
+                use: ["serif"]
             }
         ]
     }
@@ -270,7 +266,7 @@ function frontEndHandler(request, sender, sendResponse) {
         console.log("");
         console.log("%c[System] Preparing Data for: '" + sender.url + "'",'color: lightblue');
             var sendFont = match(sender.url,true);
-            if(request.last[0] == sendFont.f[0] && system.enabled == true){
+            if(request.last[0] == sendFont.f[0] && request.last[1] == sendFont.w && system.enabled == true){
                 console.log("%c[System] No Changed - Not modified - " + sender.url,'color: red');
                 return;
             }
@@ -289,6 +285,9 @@ function frontEndHandler(request, sender, sendResponse) {
                 }
             }
             fontCode += "*{font-family: " + sendFont.f + ", fontAwesome !important;}";
+            if(sendFont.w != "normal"){
+                fontCode += "*{font-weight: " + sendFont.w + " !important;}"
+            }
             console.log("%c[System] Exec " + fontCode,'background: black; color: blue');
         if(system.enabled == true){
             host.tabs.insertCSS(
@@ -301,7 +300,7 @@ function frontEndHandler(request, sender, sendResponse) {
             );
             sendResponse({
                 exec: fontCode,
-                last: sendFont.f
+                last: [sendFont.f[0],sendFont.w]
             });
             console.log("%c[System] Modified - " + sender.url, 'color: green;');
         }

@@ -1,6 +1,6 @@
 var curr = {
   exec: "!",
-  last: [null]
+  last: [null,"normal"]
 }
 function error(error) {
   setTimeout(function(){

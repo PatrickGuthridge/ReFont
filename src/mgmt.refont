@@ -180,6 +180,39 @@
     .small{
         font-size: 10px;
     }
+    #overlay{
+        position: fixed;
+        z-index: -2;
+        transition: background 0.5s ease-in-out;
+        background: rgba(0, 0, 0, 0.0);
+        height: 100%;
+        width: 100%;
+        top: 0px;
+        left: 0px;
+    }
+    #overlay.active{
+        z-index: 1;
+        background: rgba(0, 0, 0, 0.25);
+    }
+    #editForm{
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%,-50%);
+        width: 200px;
+        height: 100px;
+        transition: background 0.5s ease-in-out;
+        background:  rgba(255, 255, 255, 0);
+        z-index: -2;
+    }
+    #editForm.active{
+        background:  rgba(255, 255, 255, 0.9);
+        z-index: 2;
+    }
+    .libedit{
+        color: blue;
+        cursor: pointer;
+    }
         </style>
         <title>mgmt.refont</title>
     </head>
