@@ -2,24 +2,18 @@ var curr = {
   exec: "!",
   last: [null]
 }
-function extLog(log,type){
-  var data = browser.runtime.sendMessage({
-    messageType: type,
-    message: log
-  });
-  data.then(null, error);  
-}
 function error(error) {
-  extLog(` ${error}`,"err");
+  setTimeout(function(){
+    getFontData();
+    console.log("e")
+  }, 100)
 }
   function handleFontResponse(message) {
     if(message.exec){
-      console.log(curr.exec)
       curr.exec = message.exec;
     }
     if(message.last){
       curr.last = message.last;
-      console.log(curr.last)
     }
   }
   function getFontData(){

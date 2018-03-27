@@ -27,8 +27,10 @@
             <li>Fixed the position of the ReFont logo.</li>
             <li>Prevented text highlighting on browser action.</li>
             <li>Fixed issues where the browserAction did not repond to changes in tabs. This may have solved some performance issues.</li>
-            <li>Fixed a major performance issues which affected users with many tabs.</li>
+            <li>Huge improvements to performance and overall responsiveness of the extension.</li>
+            <li>Fixed a major performance issue which affected users with many tabs.</li>
             <li>Fixed a bug which caused browserAction to glitch when background tabs reloaded.</li>
+            <li>Fixed a bug which crashed the entire extension.</li>
         </div>
         <br>
         <div id="v1-2">

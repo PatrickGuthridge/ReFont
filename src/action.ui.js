@@ -151,29 +151,34 @@ function save(e) {
 
   }
   function optionsToggle(e){
-    if(e.target.innerText == "Show More"){
-      document.body.classList.remove("lessOptions");
-      document.querySelector("#siteOptions").classList.remove("lessOptions");
-      document.querySelector("#pageOptions").classList.remove("lessOptions");
-      document.querySelector("#lessOptionsToggle").innerText = "Show Less";
-      document.querySelector(".st").innerText = "Global Font:";
-      browser.storage.local.set({
-        browserAction: {
-          more: "Show More"
-        }
-      });
+    try{
+      if(e.target.innerText == "Show More"){
+        document.body.classList.remove("lessOptions");
+        document.querySelector("#siteOptions").classList.remove("lessOptions");
+        document.querySelector("#pageOptions").classList.remove("lessOptions");
+        document.querySelector("#lessOptionsToggle").innerText = "Show Less";
+        document.querySelector(".st").innerText = "Global Font:";
+        browser.storage.local.set({
+          browserAction: {
+            more: "Show More"
+          }
+        });
+      }
+      else if(e.target.innerText == "Show Less"){
+        document.body.classList.add("lessOptions");
+        document.querySelector("#siteOptions").classList.add("lessOptions");
+        document.querySelector("#pageOptions").classList.add("lessOptions");
+        document.querySelector("#lessOptionsToggle").innerText = "Show More";
+        document.querySelector(".st").innerText = "Font:";
+        browser.storage.local.set({
+          browserAction: {
+            more: "Show Less"
+          }
+        });
+      }
     }
-    else if(e.target.innerText == "Show Less"){
-      document.body.classList.add("lessOptions");
-      document.querySelector("#siteOptions").classList.add("lessOptions");
-      document.querySelector("#pageOptions").classList.add("lessOptions");
-      document.querySelector("#lessOptionsToggle").innerText = "Show More";
-      document.querySelector(".st").innerText = "Font:";
-      browser.storage.local.set({
-        browserAction: {
-          more: "Show Less"
-        }
-      });
+    catch(e){
+      return;
     }
   }
   function forTheSite(message,sender,sendResponse){
@@ -363,7 +368,7 @@ document.querySelector("#getFonts").addEventListener("mouseout", function(){
           error.innerText = ":( Oops.\nReFont can only be used on pages with regular URLs.";
     }
     else if(site.name == "addons.mozilla.org"){
-      error.innerText = "For security reasons, ReFont can't modify addons.mozilla.org";
+      error.innerText = "For security reasons, Firefox forbids extensions from modifying this site.";
     }
     else{
       getFontData();

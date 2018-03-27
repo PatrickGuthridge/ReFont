@@ -1,4 +1,5 @@
 var host = browser;
+var isReady = false;
 var browserActionLastMessage;
 var system = {
     enabled: true
@@ -463,6 +464,10 @@ function sysInfo(e){
                 browser.runtime.sendMessage({
                     reloadBrowserAction: " "
                 }).catch(function(e){
+                    if(isReady == false){
+                        isReady = true;
+                        return;
+                    }
                     try{
                         host.tabs.query({
                             active: false,
