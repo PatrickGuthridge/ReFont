@@ -188,6 +188,7 @@ function save(e) {
         browser.runtime.sendMessage({
           afterLoad: " "
         });
+        isSettingsChange = false;
       }
     }
     if(message.tabChange){

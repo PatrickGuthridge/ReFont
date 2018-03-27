@@ -201,7 +201,7 @@ if(e == "lists"){
             enabled: true
         }
     });
-    console.log("% c[Settings] Created new fontlist.",'background: grey; color: black');
+    console.log("%c[Settings] Created new fontlist.",'background: grey; color: black');
     return;
 }
 host.storage.local.set({
