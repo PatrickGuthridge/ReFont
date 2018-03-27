@@ -113,7 +113,7 @@ function showFonts(){
                     checkbox.id = "exlib-"+ i + "-" + x;
                     checkbox.type = "checkbox";
                     variant.appendChild(checkbox);
-                    variant.innerHTML += fonts[i].variants[x];
+                    variant.appendChild(document.createTextNode(fonts[i].variants[x]));
                     variants.appendChild(variant);
                 }
                 element.appendChild(variants);
