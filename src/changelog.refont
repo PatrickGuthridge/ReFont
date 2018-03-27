@@ -22,7 +22,8 @@
         <br>
         <div id="v1-3">
             <h1>v1.3</h1>
-            <li>Finished UX / Settings UI.</li>
+            <li>Enhanced UX / Settings UI.</li>
+            <li>Fonts name and font weight can now be changed through library management!</li>
             <li>Fixed a bug where update notification did not show in some circumstances.</li>
             <li>Fixed the position of the ReFont logo.</li>
             <li>Prevented text highlighting on browser action.</li>
@@ -31,6 +32,8 @@
             <li>Fixed a major performance issue which affected users with many tabs.</li>
             <li>Fixed a bug which caused browserAction to glitch when background tabs reloaded.</li>
             <li>Fixed a bug which crashed the entire extension.</li>
+            <li><h3>Special thanks for this issue to grahamperrin for his help improving those nasty performance issues.</h3></li>
+            <li><h3>Also thanks to the anonymous user who suggested the idea for changing font weights.</h3></li>
         </div>
         <br>
         <div id="v1-2">
